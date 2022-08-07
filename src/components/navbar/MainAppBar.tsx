@@ -11,8 +11,11 @@ import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import {FC} from "react";
-import {useAppSelector} from "../../hooks/redux";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {useNavigate} from "react-router-dom";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import {superheroSlice} from "../../store/reducers/SuperheroSlice";
+import {Link} from "@mui/material";
 
 interface MainAppBarInterface {
     // user: IUser | undefined;
@@ -68,23 +71,36 @@ const MainAppBar: FC<MainAppBarInterface> = () => {
         localStorage.removeItem('TOKEN');
         navigate(RouteNames.LOGIN);
     }
+    const {setOnlyRead, setId} = superheroSlice.actions;
+    const dispatch = useAppDispatch();
+
+    const handleAddClick = () => {
+        dispatch(setOnlyRead(false));
+        dispatch(setId(-1));
+        navigate(RouteNames.EDIT);
+    };
 
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" >
                 <Toolbar>
                     <IconButton
+                        onClick={()=> handleAddClick()}
                         size="large"
                         edge="start"
                         color="inherit"
                         aria-label="menu"
                         sx={{ mr: 2 }}
                     >
-                        <MenuIcon />
+                        <PersonAddIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography onClick={()=> navigate(RouteNames.MAIN)} variant="h6" component="div" sx={{ flexGrow: 1 ,
+                        cursor: 'pointer'}}>
                         {process.env.REACT_APP_SITE_NAME}
                     </Typography>
+                    <Link href={RouteNames.DOC}  variant="body2">
+                        <Typography color={'white'}>Documentation</Typography>
+                    </Link>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />

@@ -3,17 +3,19 @@ import MainAppBar from "../components/navbar/MainAppBar";
 import {ISuperhero} from "../models/ISuperhero";
 import HeroPage from "../components/HeroPage";
 import './editing.css';
+import {useAppSelector} from "../hooks/redux";
+import HeroEditCreate from "../components/HeroEditCreate";
 
 interface IEditingProps {
     hero?: ISuperhero;
 }
 
 const Editing:FC<IEditingProps> = ({hero}) => {
-
+    const {onlyRead} = useAppSelector(state => state.superheroReducer);
     return (
         <div>
             <MainAppBar />
-            <HeroPage />
+            {onlyRead ? <HeroPage /> : <HeroEditCreate/>}
         </div>
     );
 };

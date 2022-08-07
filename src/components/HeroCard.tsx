@@ -5,7 +5,6 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -16,13 +15,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import {ISuperhero} from "../models/ISuperhero";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {IUser} from "../models/IUser";
-import {useAppSelector} from "../hooks/redux";
+import {useAppDispatch, useAppSelector} from "../hooks/redux";
 import {Grid} from "@mui/material";
+import {superheroSlice} from "../store/reducers/SuperheroSlice";
+import {useNavigate} from "react-router-dom";
+import {RouteNames} from "../router";
 
 interface HeroItemProps {
     hero: ISuperhero;
-    remove: (hero: ISuperhero) => void;
-    update: (hero: ISuperhero) => void;
     addFavorite: ({}) => void;
     removeFavorite: ({}) => void;
 }
@@ -43,12 +43,22 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 const HeroCard: FC<HeroItemProps> = ({hero,
-                                         addFavorite, removeFavorite, remove, update}) => {
+                                         addFavorite, removeFavorite}) => {
     const {user, favorite_superheros_ids} = useAppSelector(state => state.userReducer);
-    const [expanded, setExpanded] = React.useState(false);
+    const {setOnlyRead, setId} = superheroSlice.actions;
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
+    const handleExpandClick = (id: number) => {
+        dispatch(setOnlyRead(true));
+        dispatch(setId(id));
+        navigate(RouteNames.EDIT);
+    };
+
+    const handleEditClick = (id: number) => {
+        dispatch(setOnlyRead(false));
+        dispatch(setId(id));
+        navigate(RouteNames.EDIT);
     };
     
     const favorite = (hero: ISuperhero, user: IUser) => {
@@ -72,8 +82,8 @@ const HeroCard: FC<HeroItemProps> = ({hero,
                 </Avatar>
             }
             action={
-                <IconButton aria-label="settings">
-                    <EditIcon />
+                <IconButton  onClick={() => handleEditClick(hero.id)} aria-label="settings">
+                    <EditIcon  />
                 </IconButton>
             }
             title={hero.nickname}
@@ -99,26 +109,14 @@ const HeroCard: FC<HeroItemProps> = ({hero,
                     <FavoriteBorderIcon  /> }
             </IconButton> }
             <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
+                expand={true}
+                onClick={() => handleExpandClick(hero.id)}
+                aria-expanded={true}
                 aria-label="show more"
             >
                 <ExpandMoreIcon />
             </ExpandMore>
         </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-                <Typography paragraph>Superpowers:</Typography>
-                <Typography paragraph>
-                    {hero.superpowers}
-                </Typography>
-                <Typography paragraph>Catch phrase:</Typography>
-                <Typography>
-                    {hero.catch_phrase}
-                </Typography>
-            </CardContent>
-        </Collapse>
     </Card>
         </Grid>
     );

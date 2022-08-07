@@ -11,5 +11,6 @@ export enum RouteNames {
     LOGIN = '/login',
     MAIN = '/',
     REGISTRATION = '/registration',
-    EDIT = '/edit'
+    EDIT = '/hero',
+    DOC = 'http://localhost:5001/api/docs'
 }

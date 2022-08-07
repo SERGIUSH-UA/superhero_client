@@ -1,13 +1,36 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {Navigate, Routes, Route, BrowserRouter} from "react-router-dom";
 import Login from "../pages/login";
 import Main from "../pages/main";
 import Register from "../pages/register";
 import {RouteNames} from "../router";
-import {Edit} from "@mui/icons-material";
 import Editing from "../pages/editing";
+import {userSlice} from "../store/reducers/UserSlice";
+import {useAppDispatch, useAppSelector} from "../hooks/redux";
+import {userAPI} from "../services/user.service";
 
 const AppRouter: FC = () => {
+
+    const {token} = useAppSelector(state => state.userReducer)
+    const {setUser, setToken} = userSlice.actions;
+    const dispatch = useAppDispatch();
+
+    const {data: userResp} = userAPI.useCheckAuthQuery(token);
+
+    useEffect(()=> {
+        if(userResp){
+            dispatch(setUser(userResp));
+        }
+    }, [userResp])
+    useAppDispatch();
+
+    useEffect(()=> {
+        const localToken = localStorage.getItem('TOKEN');
+        if(localToken){
+            dispatch(setToken(localToken));
+        }
+    },[])
+
     return (
         <BrowserRouter>
             <Routes>

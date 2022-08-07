@@ -7,6 +7,7 @@ interface UserState {
     isLoading: boolean;
     error: string;
     auth: boolean;
+    token: string;
 }
 
 const initialState: UserState = {
@@ -15,7 +16,8 @@ const initialState: UserState = {
     isLoading: false,
     error: '',
     auth: false,
-    favorite_superheros_ids:[]
+    favorite_superheros_ids:[],
+    token: ''
 }
 
 export const userSlice = createSlice({
@@ -30,6 +32,10 @@ export const userSlice = createSlice({
                 state.favorite_superheros_ids = [];
                 state.user.favorite_superheros.forEach(hero => state.favorite_superheros_ids.push(hero.id))
             }
+        },
+        setToken(state, action: PayloadAction<string>){
+            state.token = action.payload;
+            state.auth = true;
         }
     }
 })

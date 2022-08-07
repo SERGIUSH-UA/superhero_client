@@ -3,21 +3,19 @@ import {
     Avatar,
     Box,
     Button,
-    Checkbox,
     Container,
-    createTheme,
     CssBaseline,
-    FormControlLabel,
     Grid,
     Link, TextField,
     Typography
 } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { ThemeProvider } from '@mui/material/styles';
 import {RouteNames} from "../router";
 import {userAPI} from "../services/user.service";
 import {IUser} from "../models/IUser";
 import {useNavigate} from "react-router-dom";
+import {userSlice} from "../store/reducers/UserSlice";
+import {useAppDispatch} from "../hooks/redux";
 
 
 
@@ -28,7 +26,8 @@ const Login: FC = () => {
     const navigate = useNavigate();
 
     const [enterLogin, {data: token, error: loginError}] = userAPI.useLoginMutation();
-
+    const {setToken} = userSlice.actions;
+    const dispatch = useAppDispatch();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -41,6 +40,7 @@ const Login: FC = () => {
     useEffect(()=> {
         if(token){
             localStorage.setItem('TOKEN', token.token);
+            dispatch(setToken(token.token));
             navigate('/');
         }
     },[token]);

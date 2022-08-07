@@ -1,8 +1,17 @@
 import React from 'react';
-import {Box, Button, Container, Grid, Link, TextField, Typography} from "@mui/material";
+import {Button, CardActionArea, Container, Grid, Typography} from "@mui/material";
+import {useAppSelector} from "../hooks/redux";
+import {superheroAPI} from "../services/superhero.service";
+import {useNavigate} from "react-router-dom";
 import {RouteNames} from "../router";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
 
 const HeroPage = () => {
+    const navigate = useNavigate();
+    const {id} = useAppSelector(state => state.superheroReducer);
+    const {data: hero, error, isLoading} = superheroAPI.useFetchOneQuery(id);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -11,23 +20,39 @@ const HeroPage = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            <Typography variant='h4' align='center' mt={3} color='textPrimary'>Create superhero</Typography>
-            <Grid container spacing={2} justifyContent='center'>
-                <Grid item xs={12} sm={6} md={6}>
-                    <Typography variant='h5' align='center' mt={3} color='textPrimary'>Create superhero</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                    <Typography variant='h5' align='center' mt={3} color='textPrimary'>Create superhero</Typography>
-                </Grid>
-            </Grid>
-            <Grid container justifyContent="flex-end">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{mt: 4, mb: 4, mr:20}}
-                >
-                    Add new
-                </Button>
+            {isLoading &&  <Typography variant='h5' align='center' mt={3} color='textSecondary'>Loading....</Typography>}
+            <Grid container spacing={2} justifyContent='center' mt={3}>
+                <Card>
+                        <CardMedia
+                            component="img"
+                            height="240"
+                            image={hero? process.env.REACT_APP_SERVER_URL + hero.main_image : 'https://www.istockphoto.com/illustrations/no-image-available-icon'}
+                            alt="superhero avatar"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                {hero?.nickname}
+                            </Typography>
+                            <Typography gutterBottom variant="h6" component="div">
+                                {hero?.real_name}
+                            </Typography>
+                            <Typography paragraph>Bio:</Typography>
+                            <Typography paragraph variant="body2" color="text.secondary">
+                                {hero?.origin_description}
+                            </Typography>
+                            <Typography paragraph>Superpowers:</Typography>
+                            <Typography paragraph variant="body2" color="text.secondary">
+                                {hero?.superpowers}
+                            </Typography>
+                            <Typography paragraph>Catch phrase:</Typography>
+                            <Typography paragraph variant="body2" color="text.secondary">
+                                {hero?.catch_phrase}
+                            </Typography>
+                        </CardContent>
+                    <CardActionArea>
+                        <Button fullWidth variant="contained" onClick={() => navigate(RouteNames.MAIN)}>Close</Button>
+                    </CardActionArea>
+                </Card>
             </Grid>
         </Container>
     );
