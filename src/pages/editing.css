@@ -1,0 +1,40 @@
+.hero__page{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2px;
+    align-items: center;
+}
+
+.hero__box{
+    display: flex;
+    flex-direction: row;
+    margin-top: 2px;
+    align-items: center;
+}
+
+.hero__column{
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+    align-items: center;
+    width: 35%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.hero__row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.hero__input{
+    margin-right: 5px;
+    margin-top: 5px;
+    width: 350px;
+}
+
+.hero__justify__end{
+    justify-content: end;
+}
