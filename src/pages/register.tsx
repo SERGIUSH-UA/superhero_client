@@ -16,6 +16,9 @@ import {useNavigate} from "react-router-dom";
 import {userAPI} from "../services/user.service";
 import {IUser} from "../models/IUser";
 import {useEffect} from "react";
+import MainAppBar from "../components/navbar/MainAppBar";
+import {userSlice} from "../store/reducers/UserSlice";
+import {useAppDispatch} from "../hooks/redux";
 
 
 const theme = createTheme();
@@ -26,6 +29,8 @@ export default function Register() {
 
     const [registration, {data: token, error: registrationError}] = userAPI.useRegistrationMutation();
 
+    const {setToken} = userSlice.actions;
+    const dispatch = useAppDispatch();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -41,6 +46,7 @@ export default function Register() {
     useEffect(()=> {
         if(token){
             localStorage.setItem('TOKEN', token.token);
+            dispatch(setToken(token.token));
             navigate('/');
         }
     },[token]);
@@ -48,10 +54,11 @@ export default function Register() {
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
+                <MainAppBar></MainAppBar>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: 15,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',

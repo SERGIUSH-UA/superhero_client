@@ -8,8 +8,7 @@ export interface ISuperhero{
     origin_description: string;
     superpowers: string;
     catch_phrase: string;
-    images: File[];
-    images_array: string[];
+    images: string;
     main_image: string;
     author_id: number;
     followers: IUser[];

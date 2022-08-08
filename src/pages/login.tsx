@@ -16,6 +16,7 @@ import {IUser} from "../models/IUser";
 import {useNavigate} from "react-router-dom";
 import {userSlice} from "../store/reducers/UserSlice";
 import {useAppDispatch} from "../hooks/redux";
+import MainAppBar from "../components/navbar/MainAppBar";
 
 
 
@@ -47,11 +48,13 @@ const Login: FC = () => {
 
     // @ts-ignore
     return (
+
             <Container component="main" maxWidth="xs">
+                <MainAppBar></MainAppBar>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: 15,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',

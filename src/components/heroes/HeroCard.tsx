@@ -20,27 +20,13 @@ import {Grid} from "@mui/material";
 import {superheroSlice} from "../../store/reducers/SuperheroSlice";
 import {useNavigate} from "react-router-dom";
 import {RouteNames} from "../../router";
+import ExpandMore from "../elements/ExpandMore";
 
 interface HeroItemProps {
     hero: ISuperhero;
     addFavorite: ({}) => void;
     removeFavorite: ({}) => void;
 }
-
-interface ExpandMoreProps extends IconButtonProps {
-    expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-    const {expand, ...other} = props;
-    return <IconButton {...other} />;
-})(({theme, expand}) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    })
-}));
 
 const HeroCard: FC<HeroItemProps> = ({
                                          hero,

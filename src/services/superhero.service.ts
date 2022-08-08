@@ -16,7 +16,7 @@ export const superheroAPI = createApi({
     reducerPath: 'superheroAPI',
     // baseQuery: fetchBaseQuery({baseUrl: process.env.REACT_APP_SERVER_URL}),
     baseQuery: fetchBaseQuery({baseUrl: process.env.REACT_APP_SERVER_URL}),
-    tagTypes:['Superheroes'],
+    tagTypes:['Superheroes','Hero'],
     endpoints: (build) => ({
         fetchAll: build.query<IFetchAll, any>({
             query: (arg) => {
@@ -36,7 +36,7 @@ export const superheroAPI = createApi({
                 return {
                     url: `/api/superheros/${id}`
                 }
-            }
+            }, providesTags: result => ['Hero']
         }),
         create: build.mutation<ISuperhero, FormData>({
             query: (hero:FormData) => {
@@ -46,7 +46,7 @@ export const superheroAPI = createApi({
                     //credentials: 'include',
                     body: hero
                 }
-            }, invalidatesTags: ['Superheroes']
+            }, invalidatesTags: ['Superheroes', 'Hero']
         }),
         update: build.mutation<ISuperhero, ICreateUpdate>({
             query: (arg) => {
@@ -57,7 +57,7 @@ export const superheroAPI = createApi({
                     //credentials: 'include',
                     body: hero
                 }
-            }, invalidatesTags: ['Superheroes']
+            }, invalidatesTags: ['Superheroes', 'Hero']
         }),
         delete: build.mutation<ISuperhero, ISuperhero>({
             query: (hero: ISuperhero) => {
@@ -65,7 +65,7 @@ export const superheroAPI = createApi({
                     url: `/api/superheros/${hero.id}`,
                     method: 'DELETE'
                 }
-            }, invalidatesTags: ['Superheroes']
+            }, invalidatesTags: ['Superheroes', 'Hero']
         }),
         addFavorite: build.mutation<IUser, any>({
             query: (arg) => {

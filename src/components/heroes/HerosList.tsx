@@ -41,13 +41,13 @@ const HeroesList: FC<HeroesInterface> = () => {
         <Container sx={{py: 8}} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4} marginBottom={5}>
-                {isLoading && <h2>Loading.....</h2>}
+                {isLoading && <Typography mt={8} variant='h6' >Loading.....</Typography>}
                 {error && <h2 style={{color: 'red'}}>Error</h2>}
                 {heroes && heroes.rows && heroes.rows.map(hero =>
                     <HeroCard addFavorite={addFavorite} removeFavorite={removeFavorite}
                               key={hero.id} hero={hero} />
                 )}
-                {heroes && heroes.count === 0 && <Typography mt={8} mr={3} ml={3} variant='h3'>The Db is empty.
+                {heroes && heroes.count === 0 && <Typography mt={8} mr={3} ml={3} variant='h3'>The catalog is empty.
                     {user.id !== 0 ?
                     ' If you want you can add new hero. Click on the left top corner icon' :
                     ' Login please if you want add new hero' } </Typography>}

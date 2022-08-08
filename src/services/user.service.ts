@@ -7,6 +7,7 @@ export const userAPI = createApi({
     reducerPath: 'userAPI',
     // baseQuery: fetchBaseQuery({baseUrl: process.env.REACT_APP_SERVER_URL}),
     baseQuery: fetchBaseQuery({baseUrl: process.env.REACT_APP_SERVER_URL}),
+    tagTypes: ['User'],
     endpoints: (build) => ({
           // login: build.mutation(),
         checkAuth: build.query<IUser, string>({
@@ -14,7 +15,7 @@ export const userAPI = createApi({
                 return {
                     url: `/auth/check/${token}`
                 }
-            }
+            }, providesTags: result => ['User']
         }),
         login: build.mutation<IToken, IUser>({
             query: (user:IUser) => {
@@ -23,7 +24,7 @@ export const userAPI = createApi({
                     method: 'POST',
                     body: user
                 }
-            }
+            }, invalidatesTags: ['User']
         }),
         registration: build.mutation<IToken, IUser>({
             query: (user:IUser) => {
@@ -32,7 +33,7 @@ export const userAPI = createApi({
                     method: 'POST',
                     body: user
                 }
-            }
+            }, invalidatesTags: ['User']
         })
     })
 

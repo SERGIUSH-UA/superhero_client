@@ -14,7 +14,8 @@ import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {useNavigate} from "react-router-dom";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {superheroSlice} from "../../store/reducers/SuperheroSlice";
-import {Link} from "@mui/material";
+import {Grid, Link} from "@mui/material";
+import {userSlice} from "../../store/reducers/UserSlice";
 
 interface MainAppBarInterface {
     // user: IUser | undefined;
@@ -66,12 +67,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const MainAppBar: FC<MainAppBarInterface> = () => {
     const {user} = useAppSelector(state => state.userReducer);
     const navigate = useNavigate();
+
+    const {setOnlyRead, setId, resetSup} = superheroSlice.actions;
+    const {reset} = userSlice.actions;
+    const dispatch = useAppDispatch();
+
     const logout = () => {
         localStorage.removeItem('TOKEN');
+        dispatch(reset());
         navigate(RouteNames.LOGIN);
     }
-    const {setOnlyRead, setId, resetSup} = superheroSlice.actions;
-    const dispatch = useAppDispatch();
 
     const handleAddClick = () => {
         dispatch(setOnlyRead(false));
@@ -94,14 +99,16 @@ const MainAppBar: FC<MainAppBarInterface> = () => {
                     >
                         <PersonAddIcon />
                     </IconButton> }
-                    <Typography onClick={()=> navigate(RouteNames.MAIN)} variant="h6" component="div" sx={{ flexGrow: 1 ,
+                    <Typography onClick={()=> navigate(RouteNames.MAIN)} variant="body1" component="div" sx={{ flexGrow: 1 ,
                         cursor: 'pointer', display: {xs: 'none', sm: 'block'}}}>
                         {process.env.REACT_APP_SITE_NAME}
                     </Typography>
-                    <Link sx={{ flexGrow: 1}} href={RouteNames.DOC}  variant="body2">
+                    <Grid  container justifyContent="flex-end">
+                        <Grid item>
+                    <Link href={RouteNames.DOC}  variant="body2">
                         <Typography color={'white'}>Documentation</Typography>
-                    </Link>
-                    <Search sx={{display: {xs: 'none', md: 'block'}}}>
+                    </Link></Grid></Grid>
+                    <Search sx={{display: 'none'}}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -110,9 +117,9 @@ const MainAppBar: FC<MainAppBarInterface> = () => {
                             inputProps={{ 'aria-label': 'search' }}
                         />
                     </Search>
-                    {user.id ? <Button color="inherit" onClick={() => logout()} href={RouteNames.LOGIN}>Logout, {user.username}!</Button>
+                    {user.id ? <Button sx={{ml:3}} color="inherit" onClick={() => logout()}>Logout, {user.username}!</Button>
                         :
-                        <Button color="inherit" href={RouteNames.LOGIN}>Login</Button>}
+                        <Button sx={{ml:3}} color="inherit" href={RouteNames.LOGIN}>Login</Button>}
                 </Toolbar>
             </AppBar>
         </Box>
