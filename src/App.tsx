@@ -1,5 +1,5 @@
 import React from 'react';
-import AppRouter from "./components/AppRouter";
+import AppRouter from "./components/router/AppRouter";
 import {ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
 

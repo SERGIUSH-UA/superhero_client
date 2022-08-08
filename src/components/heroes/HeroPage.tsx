@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button, CardActionArea, Container, Grid, Typography} from "@mui/material";
-import {useAppSelector} from "../hooks/redux";
-import {superheroAPI} from "../services/superhero.service";
+import {useAppSelector} from "../../hooks/redux";
+import {superheroAPI} from "../../services/superhero.service";
 import {useNavigate} from "react-router-dom";
-import {RouteNames} from "../router";
+import {RouteNames} from "../../router";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -19,14 +19,16 @@ const HeroPage = () => {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container sx={{py: 8}} component="main" maxWidth="xs">
             {isLoading &&  <Typography variant='h5' align='center' mt={3} color='textSecondary'>Loading....</Typography>}
             <Grid container spacing={2} justifyContent='center' mt={3}>
+               <Grid item xs={11} sm={11} md={11}>
                 <Card>
                         <CardMedia
                             component="img"
                             height="240"
-                            image={hero? process.env.REACT_APP_SERVER_URL + hero.main_image : 'https://www.istockphoto.com/illustrations/no-image-available-icon'}
+                            image={hero && hero.main_image !== '' ? process.env.REACT_APP_SERVER_URL + hero.main_image :
+                                process.env.PUBLIC_URL + 'no-image-icon.png'  }
                             alt="superhero avatar"
                         />
                         <CardContent>
@@ -53,6 +55,7 @@ const HeroPage = () => {
                         <Button fullWidth variant="contained" onClick={() => navigate(RouteNames.MAIN)}>Close</Button>
                     </CardActionArea>
                 </Card>
+               </Grid>
             </Grid>
         </Container>
     );

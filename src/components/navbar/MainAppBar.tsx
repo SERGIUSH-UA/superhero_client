@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import {RouteNames} from "../../router";
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
@@ -71,20 +70,21 @@ const MainAppBar: FC<MainAppBarInterface> = () => {
         localStorage.removeItem('TOKEN');
         navigate(RouteNames.LOGIN);
     }
-    const {setOnlyRead, setId} = superheroSlice.actions;
+    const {setOnlyRead, setId, resetSup} = superheroSlice.actions;
     const dispatch = useAppDispatch();
 
     const handleAddClick = () => {
         dispatch(setOnlyRead(false));
         dispatch(setId(-1));
+        dispatch(resetSup());
         navigate(RouteNames.EDIT);
     };
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" >
+            <AppBar position="fixed" >
                 <Toolbar>
-                    <IconButton
+                    {user.id !== 0 && <IconButton
                         onClick={()=> handleAddClick()}
                         size="large"
                         edge="start"
@@ -93,15 +93,15 @@ const MainAppBar: FC<MainAppBarInterface> = () => {
                         sx={{ mr: 2 }}
                     >
                         <PersonAddIcon />
-                    </IconButton>
+                    </IconButton> }
                     <Typography onClick={()=> navigate(RouteNames.MAIN)} variant="h6" component="div" sx={{ flexGrow: 1 ,
-                        cursor: 'pointer'}}>
+                        cursor: 'pointer', display: {xs: 'none', sm: 'block'}}}>
                         {process.env.REACT_APP_SITE_NAME}
                     </Typography>
-                    <Link href={RouteNames.DOC}  variant="body2">
+                    <Link sx={{ flexGrow: 1}} href={RouteNames.DOC}  variant="body2">
                         <Typography color={'white'}>Documentation</Typography>
                     </Link>
-                    <Search>
+                    <Search sx={{display: {xs: 'none', md: 'block'}}}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>

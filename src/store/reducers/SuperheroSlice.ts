@@ -43,6 +43,9 @@ export const superheroSlice = createSlice({
         },
         setSupCatchPhrase(state, action: PayloadAction<string>){
             state.superhero.catch_phrase = action.payload;
+        },
+        resetSup(state){
+            state.superhero = initialState.superhero;
         }
 
     }

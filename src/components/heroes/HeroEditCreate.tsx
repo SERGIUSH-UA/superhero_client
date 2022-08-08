@@ -1,12 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Container, Grid, TextField, Typography} from "@mui/material";
-import {useAppDispatch, useAppSelector} from "../hooks/redux";
-import {superheroAPI} from "../services/superhero.service";
-import {RouteNames} from "../router";
+import {Box, Button, Container, Grid, Modal, TextField, Typography} from "@mui/material";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {superheroAPI} from "../../services/superhero.service";
+import {RouteNames} from "../../router";
 import {useNavigate} from "react-router-dom";
-import {superheroSlice} from "../store/reducers/SuperheroSlice";
+import {superheroSlice} from "../../store/reducers/SuperheroSlice";
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 
 const HeroEditCreate = () => {
@@ -19,8 +30,12 @@ const HeroEditCreate = () => {
         setSupRealName, setSupCatchPhrase} = superheroSlice.actions;
     const dispatch = useAppDispatch();
 
-    const [selectedFile, setSelectedFile] = useState();
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const [isFilePicked, setIsFilePicked] = useState(false);
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const [createHero, {data: newHero, error: newHeroError}] = superheroAPI.useCreateMutation();
     const [updateHero, {data: updatedHero, error: updatedHeroError}] = superheroAPI.useUpdateMutation();
@@ -28,16 +43,17 @@ const HeroEditCreate = () => {
 
     const changeFileHandler = (event: any) => {
         if (event.target && event.target.files){
-            setSelectedFile(event.target.files[0]);
-            console.log(event.target.files[0].name);
+            setSelectedFiles(event.target.files);
             setIsFilePicked(true);
         }
     };
 
     const handleSubmit = async () => {
         let data = new FormData();
-        if (selectedFile) {
-            data.append('images',selectedFile);
+        if (selectedFiles.length) {
+            for(const indexFile in selectedFiles) {
+                data.append('images',selectedFiles[indexFile]);
+            }
         }
         // for(let key in hero){
         //     if(key.includes('images') || key.includes('author_id')){
@@ -51,12 +67,6 @@ const HeroEditCreate = () => {
         data.append("superpowers", hero.superpowers);
         data.append("catch_phrase", hero.catch_phrase);
         data.append("main_image", hero.main_image);
-        // if(id === -1){
-        //     createHero({...hero, images: files, author_id: user.id} as ISuperhero);
-        // }
-        // else {
-        //     updateHero({...hero, images: files} as ISuperhero);
-        // }
         if(id === -1){
             createHero(data);
         }
@@ -100,7 +110,7 @@ const HeroEditCreate = () => {
     },[updatedHero])
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container sx={{py: 8}} component="main" maxWidth="xs">
             <Typography variant='h4' align='center' mt={3} color='textPrimary'>{id === -1 ? "Create" : "Edit"} superhero</Typography>
 
             <Grid container spacing={2} justifyContent='center'>
@@ -126,10 +136,25 @@ const HeroEditCreate = () => {
                 <TextField
                     onChange={changeFileHandler}
                     type='file'
+                    inputProps={{
+                        multiple: true
+                    }}
                 /></Grid>
-                <Button sx={{mt: 3}} onClick={()=> handleDelete()} variant="contained"><DeleteIcon></DeleteIcon></Button>
+                {id !== -1 && <Button sx={{mt: 3}} onClick={()=> handleOpen()} variant="contained"><DeleteIcon></DeleteIcon></Button> }
             </Box>
-
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Do you real want delete hero?
+                    </Typography>
+                    <Button sx={{mt: 3}} onClick={()=> handleDelete()} variant="contained"><DeleteIcon></DeleteIcon></Button>
+                </Box>
+            </Modal>
             <Grid mt={3} container justifyContent="flex-end">
                 <Button
                     sx={{mr: 3}}

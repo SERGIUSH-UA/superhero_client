@@ -1,13 +1,13 @@
 import React, {FC, useEffect} from 'react';
 import {Navigate, Routes, Route, BrowserRouter} from "react-router-dom";
-import Login from "../pages/login";
-import Main from "../pages/main";
-import Register from "../pages/register";
-import {RouteNames} from "../router";
-import Editing from "../pages/editing";
-import {userSlice} from "../store/reducers/UserSlice";
-import {useAppDispatch, useAppSelector} from "../hooks/redux";
-import {userAPI} from "../services/user.service";
+import Login from "../../pages/login";
+import Main from "../../pages/main";
+import Register from "../../pages/register";
+import {RouteNames} from "../../router";
+import Editing from "../../pages/editing";
+import {userSlice} from "../../store/reducers/UserSlice";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {userAPI} from "../../services/user.service";
 
 const AppRouter: FC = () => {
 
